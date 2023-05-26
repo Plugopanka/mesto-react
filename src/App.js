@@ -1,144 +1,95 @@
-import logo from './logo.svg';
-// import './index.css';
+import React from "react";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
+import Main from "./components/Main.js";
+import PopupWithForm from "./components/PopupWithForm.js";
+import ImagePopup from "./components/ImagePopup.js";
 
 function App() {
+  const [isEditPopupOpen, setIsEditPopupOpen] = React.useState(false);
+  const [isAddPopupOpen, setIsAddPopupOpen] = React.useState(false);
+  const [isChangePopupOpen, setIsChangePopupOpen] = React.useState(false);
+  const [isSubmitPopupOpen, setIsSubmitPopupOpen] = React.useState(false);
+  const [targetCard, setTargetCard] = React.useState({});
+
+  function closeAllPopups() {
+    setIsEditPopupOpen(false);
+    setIsAddPopupOpen(false);
+    setIsChangePopupOpen(false);
+    setIsSubmitPopupOpen(false);
+    setTargetCard({});
+  }
+
+
   return (
-    <>
-    <main className="content">
-        <section className="profile">
-          <div className="profile__container">
-            <button className="profile__avatar-button">
-            <img
-              alt="Аватар владельца аккаунта."
-              className="profile__avatar"
-            />
-          </button>
-            <div className="profile__info">
-              <h1 className="profile__name"></h1>
-              <button
-                className="profile__edit-button"
-                type="button"
-                aria-label="Редактировать профиль."
-              ></button>
-              <p className="profile__description"></p>
-            </div>
-          </div>
-          <button
-            className="profile__add-button"
-            type="button"
-            aria-label="Добавить публикацию."
-          ></button>
-        </section>
+    <div className="root">
+      <div className="page">
+        <Header />
 
-        <section className="cards">
-          <ul className="cards__list">
-            <template className="card-template">
-              <li className="card">
-                <button
-                  className="card__view"
-                  type="button"
-                  aria-label="Увеличить фото.">
-                <img
-                  className="card__image"
-                />
-                </button>
-                <button
-                  className="card__delete"
-                  type="button"
-                  aria-label="Удалить пост."
-                ></button>
-                <div className="card__container">
-                  <h2 className="card__place"></h2>
-                  <div className="card__like-container">
-                  <button
-                    className="card__like"
-                    id="like"
-                    type="button"
-                    aria-label="Мне нравится."
-                  ></button>
-                  <p className="card__like-counter"></p>
-                </div>
-                </div>
-              </li>
-            </template>
-          </ul>
-        </section>
-      </main>
+        <Main
+          onEditProfile={setIsEditPopupOpen}
+          onAddPlace={setIsAddPopupOpen}
+          onEditAvatar={setIsChangePopupOpen}
+          onCardClick={setTargetCard}
+        />
 
-      <section className="popup popup_function_edit">
-        <div className="popup__container">
-          <form className="popup__border" name="edit-form" noValidate>
-            <h2 className="popup__title">Редактировать профиль</h2>
-            <input
-              type="text"
-              name="name"
-              className="popup__input"
-              id="input-name"
-              placeholder="Имя"
-              required
-              minLength="2"
-              maxLength="40"
-            />
-            <span className=" popup__input-error name-error"></span>
-            <input
-              type="text"
-              name="about"
-              className="popup__input"
-              id="input-description"
-              placeholder="О себе"
-              required
-              minLength="2"
-              maxLength="200"
-            />
-            <span className=" popup__input-error about-error"></span>
-            <button
-              type="submit"
-              className="popup__save-button"
-              aria-label="Сохранить изменения."
-            >
-            </button>
-          </form>
-          <button
-            className="popup__exit-button"
-            type="button"
-            aria-label="Выйти без изменений."
-          ></button>
-        </div>
-      </section>
+        <PopupWithForm
+          name="edit"
+          title="Редактировать профиль"
+          buttonText="Сохранить"
+          isOpen={isEditPopupOpen}
+          onClose={closeAllPopups}
+        >
+          <input
+            type="text"
+            name="name"
+            className="popup__input"
+            id="input-name"
+            placeholder="Имя"
+            required
+            minLength="2"
+            maxLength="40"
+          />
+          <span className=" popup__input-error name-error"></span>
+          <input
+            type="text"
+            name="about"
+            className="popup__input"
+            id="input-description"
+            placeholder="О себе"
+            required
+            minLength="2"
+            maxLength="200"
+          />
+          <span className=" popup__input-error about-error"></span>
+        </PopupWithForm>
 
-      <section className="popup popup_function_change">
-        <div className="popup__container">
-          <form className="popup__border" name="change-form" noValidate>
-            <h2 className="popup__title">Обновить аватар</h2>
-            <input
-              type="url"
-              name="link"
-              className="popup__input"
-              id="input-avatar"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span className=" popup__input-error link-error"></span>
-            <button
-              type="submit"
-              className="popup__save-button"
-              aria-label="Сохранить изменения."
-            >
-            </button>
-          </form>
-          <button
-            className="popup__exit-button"
-            type="button"
-            aria-label="Выйти без изменений."
-          ></button>
-        </div>
-      </section>
+        <PopupWithForm
+          name="change"
+          title="Обновить аватар"
+          buttonText="Сохранить"
+          isOpen={isChangePopupOpen}
+          onClose={closeAllPopups}
+        >
+          <input
+            type="url"
+            name="link"
+            className="popup__input"
+            id="input-avatar"
+            placeholder="Ссылка на картинку"
+            required
+          />
+          <span className=" popup__input-error link-error"></span>
+        </PopupWithForm>
 
-      <section className="popup popup_function_add">
-        <div className="popup__container">
-          <form className="popup__border" name="add-form" noValidate>
-            <h2 className="popup__title">Новое место</h2>
-            <input
+        <PopupWithForm
+          name="add"
+          title="Новое место"
+          buttonText="Создать"
+          isOpen={isAddPopupOpen}
+          onClose={closeAllPopups}
+        >
+          <input
               type="text"
               name="name"
               className="popup__input"
@@ -149,65 +100,33 @@ function App() {
               maxLength="30"
             />
             <span className=" popup__input-error name-error"></span>
-            <input
-              type="url"
-              name="link"
-              className="popup__input"
-              id="input-link"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <span className=" popup__input-error link-error"></span>
-            <button
-              type="submit"
-              className="popup__save-button"
-              aria-label="Сохранить изменения."
-            >
-            </button>
-          </form>
-          <button
-            className="popup__exit-button"
-            type="button"
-            aria-label="Выйти без изменений."
-          ></button>
-        </div>
-      </section>
+          <input
+            type="url"
+            name="link"
+            className="popup__input"
+            id="input-avatar"
+            placeholder="Ссылка на картинку"
+            required
+          />
+          <span className=" popup__input-error link-error"></span>
+        </PopupWithForm>
 
-      <section className="popup popup_function_submit">
-        <div className="popup__container">
-          <form className="popup__border" name="delete-form" noValidate>
-            <h2 className="popup__title">Вы уверены?</h2>
-            <button
-              type="submit"
-              className="popup__save-button"
-              aria-label="Сохранить изменения."
-            >
-            </button>
-          </form>
-          <button
-            className="popup__exit-button"
-            type="button"
-            aria-label="Выйти без изменений."
-          ></button>
-        </div>
-      </section>
+        <PopupWithForm
+          name="submit"
+          title="Вы уверены?"
+          buttonText="Да"
+          isOpen={isSubmitPopupOpen}
+          onClose={closeAllPopups}
+        />
 
-      <section className="popup popup_function_view">
-        <div className="popup__container popup__container_background_transparent">
-          <img className="popup__image"/>
-            <p className="popup__subtitle"></p>
-          <button
-            className="popup__exit-button"
-            type="button"
-            aria-label="Выйти."
-          ></button>
-        </div>
-      </section>
+        <ImagePopup
+        card={targetCard}
+        onClose={closeAllPopups}
+        />
 
-      <footer className="footer">
-        <p className="footer__text">© 2020 Mesto Russia</p>
-      </footer>
-    </>
+        <Footer />
+      </div>
+    </div>
   );
 }
 
