@@ -1,16 +1,16 @@
-import React from "react";
-import Header from "./components/Header.js";
-import Footer from "./components/Footer.js";
-import Main from "./components/Main.js";
-import PopupWithForm from "./components/PopupWithForm.js";
-import ImagePopup from "./components/ImagePopup.js";
+import {useState} from 'react';
+import Header from "./Header.js";
+import Footer from "./Footer.js";
+import Main from "./Main.js";
+import PopupWithForm from "./PopupWithForm.js";
+import ImagePopup from "./ImagePopup.js";
 
 function App() {
-  const [isEditPopupOpen, setIsEditPopupOpen] = React.useState(false);
-  const [isAddPopupOpen, setIsAddPopupOpen] = React.useState(false);
-  const [isChangePopupOpen, setIsChangePopupOpen] = React.useState(false);
-  const [isSubmitPopupOpen, setIsSubmitPopupOpen] = React.useState(false);
-  const [targetCard, setTargetCard] = React.useState({});
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+  const [isChangePopupOpen, setIsChangePopupOpen] = useState(false);
+  const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState(false);
+  const [targetCard, setTargetCard] = useState({});
 
   function closeAllPopups() {
     setIsEditPopupOpen(false);
@@ -19,7 +19,6 @@ function App() {
     setIsSubmitPopupOpen(false);
     setTargetCard({});
   }
-
 
   return (
     <div className="root">
@@ -36,7 +35,6 @@ function App() {
         <PopupWithForm
           name="edit"
           title="Редактировать профиль"
-          buttonText="Сохранить"
           isOpen={isEditPopupOpen}
           onClose={closeAllPopups}
         >
@@ -67,7 +65,6 @@ function App() {
         <PopupWithForm
           name="change"
           title="Обновить аватар"
-          buttonText="Сохранить"
           isOpen={isChangePopupOpen}
           onClose={closeAllPopups}
         >
@@ -90,16 +87,16 @@ function App() {
           onClose={closeAllPopups}
         >
           <input
-              type="text"
-              name="name"
-              className="popup__input"
-              id="input-place"
-              placeholder="Название"
-              required
-              minLength="2"
-              maxLength="30"
-            />
-            <span className=" popup__input-error name-error"></span>
+            type="text"
+            name="name"
+            className="popup__input"
+            id="input-place"
+            placeholder="Название"
+            required
+            minLength="2"
+            maxLength="30"
+          />
+          <span className=" popup__input-error name-error"></span>
           <input
             type="url"
             name="link"
@@ -119,10 +116,7 @@ function App() {
           onClose={closeAllPopups}
         />
 
-        <ImagePopup
-        card={targetCard}
-        onClose={closeAllPopups}
-        />
+        <ImagePopup card={targetCard} onClose={closeAllPopups} />
 
         <Footer />
       </div>

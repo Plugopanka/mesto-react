@@ -1,14 +1,14 @@
-import React from "react";
+import {useEffect, useState} from 'react';
 import api from "../utils/Api.js";
 import Card from "./Card";
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = React.useState("");
-  const [userDescription, setUserDescription] = React.useState("");
-  const [userAvatar, setUserAvatar] = React.useState("");
-  const [cards, setCards] = React.useState([]);
+  const [userName, setUserName] = useState("");
+  const [userDescription, setUserDescription] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
+  const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     api
       .getUserData()
       .then((data) => {
@@ -18,22 +18,13 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       })
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
-      });
-  }, []);
+      }); 
 
-  React.useEffect(() => {
     api
       .getCards()
       .then((cardData) => {
-        console.log(cardData)
-        setCards(
-          cardData.map((data) => ({
-            likes: data.likes,
-            name: data.name,
-            link: data.link,
-            cardId: data._id,
-          }))
-        );
+        console.log(cardData);
+        setCards(cardData);
       })
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
@@ -55,7 +46,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             <img
               alt="Аватар владельца аккаунта."
               className="profile__avatar"
-              style={{ backgroundImage: `url(${userAvatar})` }}
+              src={userAvatar}
             />
           </button>
           <div className="profile__info">
@@ -85,7 +76,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         <ul className="cards__list">
           {cards.map((card) => (
             <Card
-              key={card.cardId}
+              key={card._id}
               likes={card.likes}
               name={card.name}
               link={card.link}

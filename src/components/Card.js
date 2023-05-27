@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Card(card) {
   function handleCardClick() {
-    card.onCardClick(card)
+    card.onCardClick(card);
   }
   return (
     <li className="card">
@@ -27,8 +27,7 @@ export default function Card(card) {
             id="like"
             type="button"
             aria-label="Мне нравится."
-          >
-          </button>
+          ></button>
           <p className="card__like-counter">{card.likes.length}</p>
         </div>
       </div>
