@@ -29,3 +29,5 @@ function PopupWithForm({ name, title, buttonText, isOpen, onClose, children }) {
 }
 
 export default PopupWithForm;
+
+export default PopupWithForm;
