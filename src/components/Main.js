@@ -1,35 +1,17 @@
 import {useEffect, useState} from 'react';
 import api from "../utils/Api.js";
 import Card from "./Card";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
-  const [cards, setCards] = useState([]);
+  // const [userName, setUserName] = useState("");
+  // const [userDescription, setUserDescription] = useState("");
+  // const [userAvatar, setUserAvatar] = useState("");
+  
 
-  useEffect(() => {
-    api
-      .getUserData()
-      .then((data) => {
-        setUserName(data.name);
-        setUserDescription(data.about);
-        setUserAvatar(data.avatar);
-      })
-      .catch((err) => {
-        console.log(`Ошибка загрузки ${err}`);
-      }); 
+  const currentUser = React.useContext(CurrentUserContext);
 
-    api
-      .getCards()
-      .then((cardData) => {
-        console.log(cardData);
-        setCards(cardData);
-      })
-      .catch((err) => {
-        console.log(`Ошибка загрузки ${err}`);
-      });
-  }, []);
+  
 
   return (
     <main className="content">
@@ -46,11 +28,11 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             <img
               alt="Аватар владельца аккаунта."
               className="profile__avatar"
-              src={userAvatar}
+              src={currentUser.avatar}
             />
           </button>
           <div className="profile__info">
-            <h1 className="profile__name">{userName}</h1>
+            <h1 className="profile__name">{currentUser.name}</h1>
             <button
               className="profile__edit-button"
               type="button"
@@ -59,7 +41,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
                 onEditProfile(true);
               }}
             ></button>
-            <p className="profile__description">{userDescription}</p>
+            <p className="profile__description">{currentUser.about}</p>
           </div>
         </div>
         <button

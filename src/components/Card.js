@@ -1,6 +1,11 @@
 import React from "react";
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default function Card(card) {
+  const currentUser = React.useContext(CurrentUserContext);
+  const isLiked = card.likes.some(i => i._id === currentUser._id);
+  const isOwn = card.owner._id === currentUser._id;
+
   function handleCardClick() {
     card.onCardClick(card);
   }
