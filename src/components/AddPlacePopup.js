@@ -1,12 +1,12 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({ isLoading, isOpen, onClose, onAddPlace }) {
   const [cardData, setCardData] = useState({ name: "", link: "" });
 
   useEffect(() => {
     setCardData({ name: "", link: "" });
-  }, []);
+  }, [isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -14,15 +14,15 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name: cardData.name,
       link: cardData.link,
     });
-    onClose()
   }
 
   function handleInput(e, data) {
-    setCardData({...cardData, [data]: e.target.value})
+    setCardData({ ...cardData, [data]: e.target.value });
   }
 
   return (
     <PopupWithForm
+      isLoading={isLoading}
       name="add"
       title="Новое место"
       buttonText="Создать"
@@ -31,8 +31,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       onSubmit={handleSubmit}
     >
       <input
-      onChange={e => handleInput(e, "name")}
-      value={cardData.name || ""}
+        onChange={(e) => handleInput(e, "name")}
+        value={cardData.name || ""}
         type="text"
         name="name"
         className="popup__input"
@@ -44,8 +44,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       />
       <span className=" popup__input-error name-error"></span>
       <input
-      onChange={e => handleInput(e, "link")}
-      value={cardData.link || ""}
+        onChange={(e) => handleInput(e, "link")}
+        value={cardData.link || ""}
         type="url"
         name="link"
         className="popup__input"

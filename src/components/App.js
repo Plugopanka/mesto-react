@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "./Header.js";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
-import PopupWithForm from "./PopupWithForm.js";
+import DeletePlacePopup from "./DeletePlacePopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
@@ -17,7 +17,9 @@ function App() {
   const [isChangePopupOpen, setIsChangePopupOpen] = useState(false);
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState(false);
   const [targetCard, setTargetCard] = useState({});
+  const [deletedCard, setDeletedCard] = useState({});
   const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   function closeAllPopups() {
     setIsEditPopupOpen(false);
@@ -25,6 +27,7 @@ function App() {
     setIsChangePopupOpen(false);
     setIsSubmitPopupOpen(false);
     setTargetCard({});
+    setDeletedCard({});
   }
 
   useEffect(() => {
@@ -40,9 +43,8 @@ function App() {
     api
       .getCards()
       .then((cardData) => {
-        
         setCards(cardData);
-        console.log(cardData)
+        console.log(cardData);
       })
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
@@ -50,24 +52,15 @@ function App() {
   }, []);
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => {console.log(i); i._id === currentUser._id});
+    const isLiked = card.likes.some((i) => {
+      return i._id === currentUser._id;
+    });
 
     (isLiked ? api.deleteLike(card._id) : api.putLike(card._id))
-    .then((newCard) => {
-      const newCards = cards.map(card => card._id === newCard._id ? newCard : card);
-  setCards(newCards);
-    })
-    .catch((err) => {
-      console.log(`Ошибка загрузки ${err}`);
-    });
-  }
-
-  function handleCardDelete(card) {
-    api
-      .deleteNewCard(card._id)
-      .then(() => {
-        const newCards = cards.filter((element) => {element._id !== card._id})
-        console.log(newCards)
+      .then((newCard) => {
+        const newCards = cards.map((card) =>
+          card._id === newCard._id ? newCard : card
+        );
         setCards(newCards);
       })
       .catch((err) => {
@@ -75,37 +68,61 @@ function App() {
       });
   }
 
-  function handleUpdateUser({name, about}) {
+  function handleCardDelete(card) {
+    api
+      .deleteNewCard(card._id)
+      .then(() => {
+        const newCards = cards.filter((element) => {
+          return element._id !== card._id;
+        });
+        setCards(newCards);
+      })
+      .then(closeAllPopups())
+      .catch((err) => {
+        console.log(`Ошибка загрузки ${err}`);
+      });
+  }
+
+  function handleUpdateUser({ name, about }) {
+    setIsLoading(true);
     api
       .patchUserInfo(name, about)
       .then((data) => {
         setCurrentUser(data);
       })
+      .then(closeAllPopups())
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
 
   function handleUpdateAvatar(avatar) {
+    setIsLoading(true);
     api
       .patchUserAvatar(avatar)
       .then((data) => {
         setCurrentUser(data);
       })
+      .then(closeAllPopups())
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
 
-  function handleAddPlaceSubmit({name, link}) {
+  function handleAddPlaceSubmit({ name, link }) {
+    setIsLoading(true);
     api
       .postNewCard(name, link)
       .then((newCard) => {
-        setCards([newCard, ...cards]); 
+        setCards([newCard, ...cards]);
       })
+      .then(closeAllPopups())
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
 
   return (
@@ -121,33 +138,38 @@ function App() {
             onEditAvatar={setIsChangePopupOpen}
             onCardClick={setTargetCard}
             onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            onCardDelete={setDeletedCard}
+            onCardSubmit={setIsSubmitPopupOpen}
           />
 
           <EditProfilePopup
+            isLoading={isLoading}
             isOpen={isEditPopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
           />
 
           <EditAvatarPopup
+            isLoading={isLoading}
             isOpen={isChangePopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
           />
 
           <AddPlacePopup
-          isOpen={isAddPopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit}
+            isLoading={isLoading}
+            isOpen={isAddPopupOpen}
+            onClose={closeAllPopups}
+            onAddPlace={handleAddPlaceSubmit}
           />
 
-          <PopupWithForm
-            name="submit"
-            title="Вы уверены?"
-            buttonText="Да"
+          <DeletePlacePopup
+            isLoading={isLoading}
+            card={deletedCard}
             isOpen={isSubmitPopupOpen}
             onClose={closeAllPopups}
+            onDeletePlace={handleCardDelete}
+            onDeletedCard={setDeletedCard}
           />
 
           <ImagePopup card={targetCard} onClose={closeAllPopups} />

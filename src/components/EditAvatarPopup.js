@@ -1,29 +1,23 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import PopupWithForm from "./PopupWithForm.js";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({ isLoading, isOpen, onClose, onUpdateAvatar }) {
   const [userAvatar, setUserAvatar] = useState("");
-  const currentUser = useContext(CurrentUserContext);
 
-    const avatarRef = useRef();
+  const avatarRef = useRef();
 
   useEffect(() => {
-    setUserAvatar(currentUser.avatar);
-  }, [currentUser]);
+    setUserAvatar("");
+  }, [isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
     onUpdateAvatar(avatarRef.current.value);
-    onClose()
   }
-
-  // function handleInput(e, data) {
-  //   setUserAvatar({...userAvatar, [data]: e.target.value})
-  // }
 
   return (
     <PopupWithForm
+      isLoading={isLoading}
       name="change"
       title="Обновить аватар"
       isOpen={isOpen}
@@ -31,9 +25,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       onSubmit={handleSubmit}
     >
       <input
-      // onChange={e => handleInput(e, "avatar")}
-      // value={userAvatar || ""}
-      ref={avatarRef}
+        ref={avatarRef}
         type="url"
         name="link"
         className="popup__input"

@@ -18,7 +18,7 @@ export default function Card(card) {
   }
 
   function handleDeleteClick() {
-    card.onCardDelete(card);
+    card.onCardSubmit(true);
   }
 
   return (
