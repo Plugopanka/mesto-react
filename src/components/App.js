@@ -77,7 +77,7 @@ function App() {
         });
         setCards(newCards);
       })
-      .then(closeAllPopups())
+      .then(closeAllPopups)
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
       });
@@ -90,7 +90,7 @@ function App() {
       .then((data) => {
         setCurrentUser(data);
       })
-      .then(closeAllPopups())
+      .then(closeAllPopups)
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
       })
@@ -118,7 +118,7 @@ function App() {
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
-      .then(closeAllPopups())
+      .then(closeAllPopups)
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
       })
