@@ -104,7 +104,7 @@ function App() {
       .then((data) => {
         setCurrentUser(data);
       })
-      .then(closeAllPopups())
+      .then(closeAllPopups)
       .catch((err) => {
         console.log(`Ошибка загрузки ${err}`);
       })
